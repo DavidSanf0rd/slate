@@ -3,9 +3,6 @@ title: API Reference
 
 language_tabs:
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -17,148 +14,72 @@ includes:
 search: true
 ---
 
-# Introduction
+# Introdução
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+A Api do sistema de rádio deve ser implementada assim como descrita nesse documento.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+# Autenticação
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
-# Authentication
-
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+Modo de autenticação deve ser definido pelo desenvolvedor do servidor.
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+O modo de autenticação deve ser informado aos desenvolvedores do aplicativo antes do término do desenvolvimento.
 </aside>
 
-# Kittens
+# Notícias
 
-## Get All Kittens
+## Listar todas as notícias
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "http://host.com/api/news"
+  -H "Authorization: someKey"
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
+> O comando acima retorna um json com a estrutura abaixo:
 
 ```json
 [
   {
     "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "title": "VI Concurso de música jovens talentos",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "image": "PD94bWwgdmVgLz48L3N2Zz4="
   },
   {
     "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "title": "A orquestra de câmara Vovó Dedé",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "image": "PD94bWwgdmVgLz48L3N2Zz4="
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+Esse endpoint retorna todas as notícias paginadas
 
-### HTTP Request
+### Requisição HTTP
 
-`GET http://example.com/api/kittens`
+`GET http://host.com/api/news`
 
-### Query Parameters
+### Parâmetros (query)
 
-Parameter | Default | Description
+Parametro | Padrão | Descrição
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+page | 1 | o número da página requisitada
+size | 5 | o número de notícias em uma página
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+### Observações sobre as chaves do json
 
-## Get a Specific Kitten
+Chave | Observação
+--------- | -----------
+text | essa chave do json deve conter o texto resumido da notícia para ser mostrada na tela de listagem.
+image | essa chave do json deve retornar uma imagem de resolução 200x113 codificada em base64.
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Lista uma notícia específica
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+curl "http://host.com/api/news/2"
+  -H "Authorization: someKey"
 ```
 
 > The above command returns JSON structured like this:
@@ -166,24 +87,166 @@ let max = api.kittens.get(2);
 ```json
 {
   "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "title": "A orquestra de câmara Vovó Dedé",
+  "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  "image": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVA5TDksMTYuMTdMMTkuNTksNS41OUwyMSw3WiIgLz48L3N2Zz4=="
 }
 ```
 
-This endpoint retrieves a specific kitten.
+> text: essa chave do json deve conter o texto completo da notícia para ser mostrada na tela de detalhes
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+> image: essa chave do json deve retorar uma imagem de resulução 640x360 codificada em base64
 
-### HTTP Request
+Esse endpoint retorna uma notícia em específica
 
-`GET http://example.com/kittens/<ID>`
+### Requisição HTTP
+
+`GET http://host.com/api/news/<ID>`
 
 ### URL Parameters
 
-Parameter | Description
+parametro | Descrição
 --------- | -----------
-ID | The ID of the kitten to retrieve
+ID | o id da notícia requisitada
 
+### Observações sobre as chaves do json
+
+Chave | Observação
+--------- | -----------
+text | essa chave do json deve conter o texto completo da notícia para ser mostrada na tela de detalhes.
+image | essa chave do json deve retornar uma imagem de resolução 750x422 codificada em base64.
+
+# Comentários
+
+## Listar comentários
+
+
+```shell
+curl "http://host.com/api/comments"
+  -H "Authorization: someKey"
+```
+
+> O comando acima retorna um json com a estrutura abaixo:
+
+```json
+[
+  {
+    "id": 1,
+    "author": "David Sanford",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "timeStamp": "08/01/2017 14:30:25"
+  },
+  {
+    "id": 2,
+    "author": "Luisa macedo",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "timeStamp": "07/01/2017 19:34:25"
+  }
+]
+```
+
+Esse endpoint retorna os ultimos comentários ordenado de acordo com o campo timeStamp
+
+### Requisição HTTP
+
+`GET http://host.com/api/comments`
+
+### Parâmetros (query)
+
+parametro | Padrão | Descrição
+--------- | ------- | -----------
+page | 1 | o número da página requisitada
+size | 15 | o número de comentários em uma página
+
+## Criar comentário
+
+
+```shell
+curl "http://host.com/api/comments"
+  -H "Authorization: someKey"
+```
+
+> O comando acima recebe um json com a estrutura abaixo:
+
+```json
+  {
+    "author": "David Sanford",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+  }
+```
+
+Esse endpoint cria um novo comentário
+
+### Requisição HTTP
+
+`POST http://host.com/api/comments`
+
+<aside class="notice">
+O json ao lado deve ser enviado no corpo da requisição HTTP.
+</aside>
+
+# Curtir música
+
+## Criar curtida
+
+
+```shell
+curl "http://host.com/api/like"
+  -H "Authorization: someKey"
+```
+
+> O comando acima recebe um json com a estrutura abaixo:
+
+```json
+  {
+    "program": "Ouvindo estrelas",
+    "song": "The side winder - Lee Morgan"
+  }
+```
+
+Esse endpoint cria uma entrada para curtida de uma música.
+
+### Requisição HTTP
+
+`POST http://host.com/api/like`
+
+<aside class="notice">
+O json ao lado deve ser enviado no corpo da requisição HTTP.
+</aside>
+
+# Banners
+
+## listar banners
+
+
+```shell
+curl "http://host.com/api/banners"
+  -H "Authorization: someKey"
+```
+
+> O comando acima retorna um json com a estrutura abaixo:
+
+```json
+[
+  {
+    "id": "1",
+    "partner": "Example",
+    "image": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVA5TDksMTYuMTdMMTkuNTksNS41OUwyMSw3WiIgLz48L3N2Zz4=="
+  },
+  {
+    "id": "2",
+    "partner": "Example2",
+    "image": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVA5TDksMTYuMTdMMTkuNTksNS41OUwyMSw3WiIgLz48L3N2Zz4=="
+  }
+]
+```
+
+Esse endpoint cria uma entrada para curtida de uma música.
+
+### Requisição HTTP
+
+`GET http://host.com/api/banners`
+
+<aside class="notice">
+Os banners devem ser recebidos de acordo com o horário. Assim cabe ao administrador do sistema definir quais banners serão recebidos em determinado horário.
+</aside>
